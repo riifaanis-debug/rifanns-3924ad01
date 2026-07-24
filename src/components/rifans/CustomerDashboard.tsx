@@ -1435,15 +1435,21 @@ const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ user, onClose, on
                           </div>
                           </div>
 
-                           {/* Quick actions — 3 cols on mobile, 6 on wider */}
-                           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2" dir="rtl">
-                           {quickActions.map((a, i) => (
-                              <button key={i} onClick={a.onClick} className="w-full h-[58px] rounded-[12px] bg-white dark:bg-[#12031a] border border-gold/60 flex flex-col items-center justify-center gap-1 hover:border-gold transition-all shadow-[0_6px_14px_rgba(34,4,44,0.05)]">
-                                <a.icon size={16} className="text-brand dark:text-gold" strokeWidth={1.8} />
-                                <span className="text-[9px] leading-none font-black text-brand dark:text-white whitespace-nowrap">{a.label}</span>
-                             </button>
-                           ))}
-                         </div>
+                           {/* Quick actions — horizontal scroll pills */}
+                           <div className="-mx-2 overflow-x-auto scrollbar-none" dir="rtl">
+                             <div className="flex gap-2.5 px-2 pb-1 w-max">
+                               {quickActions.map((a, i) => (
+                                 <button
+                                   key={i}
+                                   onClick={a.onClick}
+                                   className="shrink-0 w-[112px] h-[72px] rounded-[18px] bg-brand border border-gold/70 flex flex-col items-center justify-center gap-1.5 shadow-[0_8px_18px_-8px_rgba(34,4,44,0.5)] active:scale-95 transition-transform"
+                                 >
+                                   <a.icon size={20} className="text-gold" strokeWidth={1.8} />
+                                   <span className="text-[12px] leading-none font-bold text-gold whitespace-nowrap">{a.label}</span>
+                                 </button>
+                               ))}
+                             </div>
+                           </div>
 
                           {/* Requires action — red overdue invoice */}
                          {overdue && (
