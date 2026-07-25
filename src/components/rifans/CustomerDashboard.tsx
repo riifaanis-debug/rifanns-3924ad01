@@ -1437,15 +1437,15 @@ const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ user, onClose, on
 
                            {/* Quick actions — horizontal scroll pills (matches reference image) */}
                             <div className="-mx-2 overflow-x-auto scrollbar-none" dir="rtl">
-                              <div className="flex gap-1.5 px-2 pb-1 w-max">
+                              <div className="flex gap-1 px-2 pb-1 w-max">
                                {quickActions.map((a, i) => (
                                  <button
                                    key={i}
                                    onClick={a.onClick}
-                                    className="shrink-0 w-[72px] h-[54px] rounded-[13px] bg-brand border border-gold/80 flex flex-col items-center justify-center gap-1 shadow-[0_8px_16px_-10px_rgba(34,4,44,0.55)] active:scale-95 transition-transform"
+                                    className="shrink-0 w-[64px] h-[46px] rounded-[11px] bg-brand border border-gold/80 flex flex-col items-center justify-center gap-0.5 shadow-[0_6px_12px_-9px_rgba(34,4,44,0.55)] active:scale-95 transition-transform"
                                  >
-                                    <a.icon size={16} className="text-gold" strokeWidth={1.8} />
-                                    <span className="text-[8.5px] leading-none font-bold text-gold whitespace-nowrap">{a.label}</span>
+                                    <a.icon size={14} className="text-gold" strokeWidth={1.8} />
+                                    <span className="text-[8px] leading-none font-bold text-gold whitespace-nowrap">{a.label}</span>
                                  </button>
                                ))}
                              </div>
