@@ -3,6 +3,7 @@ import { CreditCard, Loader2, Send, CheckCircle, Clock, Search, User } from 'luc
 import { supabase } from '@/integrations/supabase/client';
 import { formatAmount } from '../../lib/formatNumber';
 import { getAdminUsers } from '../../lib/api';
+import PayPalPayButton from './PayPalPayButton';
 
 const FALLBACK_RATE = 3.75; // SAR per 1 USD
 
@@ -21,29 +22,8 @@ const fetchExchangeRate = async (): Promise<number> => {
 
 const generateId = () => `PAY-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
 
-// PayPal payment button (same one used for invoices)
-const PayPalButton: React.FC = () => (
-  <div className="flex justify-center">
-    <form action="https://www.paypal.com/ncp/payment/7JC8Q2G4NFSP4" method="post" target="_blank" style={{ display: 'inline-grid', justifyItems: 'center', alignContent: 'start', gap: '0.5rem' }}>
-      <input
-        type="submit"
-        value="سداد الفاتورة"
-        style={{
-          textAlign: 'center', border: 'none', borderRadius: '1.5rem',
-          minWidth: '11.625rem', padding: '0 2rem', height: '2rem',
-          fontWeight: 'bold', backgroundColor: '#1F052A', color: '#ffffff',
-          fontFamily: '"Helvetica Neue", Arial, sans-serif',
-          fontSize: '0.875rem', lineHeight: '1.125rem', cursor: 'pointer',
-        }}
-      />
-      <img src="https://www.paypalobjects.com/images/Debit_Credit_APM.svg" alt="cards" />
-      <section style={{ fontSize: '0.75rem' }}>
-        مدعوم من{' '}
-        <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style={{ height: '0.875rem', verticalAlign: 'middle', display: 'inline' }} />
-      </section>
-    </form>
-  </div>
-);
+
+
 
 // ===================== ADMIN VIEW =====================
 export const AdminPaymentRequests: React.FC = () => {
@@ -367,7 +347,7 @@ export const CustomerPaymentRequests: React.FC<CustomerPaymentRequestsProps> = (
               <CheckCircle size={16} /> تم السداد
             </div>
           ) : (
-            <PayPalButton />
+            <PayPalPayButton kind="payment_request" recordId={r.id} label="سداد الفاتورة" />
           )}
 
           <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5 flex justify-between text-[10px] text-muted">

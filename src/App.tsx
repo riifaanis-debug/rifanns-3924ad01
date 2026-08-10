@@ -37,6 +37,7 @@ import ClientCard from './components/rifans/ClientCard';
 import ProfileCompletionModal from './components/rifans/ProfileCompletionModal';
 import { WaiveInfoPage, SchedulingInfoPage, SeizedAmountsInfoPage } from './components/rifans/ServiceInfoPage';
 import DomainVerificationCheck from './components/rifans/DomainVerificationCheck';
+import PaymentReturnPage from './components/rifans/PaymentReturnPage';
 
 const StorySection = () => {
   const { t, direction } = useLanguage();
@@ -302,6 +303,10 @@ const AppContent: React.FC = () => {
   }, []);
 
   const getComponent = () => {
+    // PayPal return / cancel routes (must run before role-based routing)
+    if (route.startsWith('#/pay/return')) return <PaymentReturnPage />;
+    if (route.startsWith('#/pay/cancel')) return <PaymentReturnPage cancelled />;
+
     // Admins always see only the admin dashboard
     if (user?.role === 'admin') {
       if (route.startsWith('#/promissory/')) {
