@@ -3,6 +3,7 @@ import { CreditCard, Loader2, Send, CheckCircle, Clock, Search, User } from 'luc
 import { supabase } from '@/integrations/supabase/client';
 import { formatAmount } from '../../lib/formatNumber';
 import { getAdminUsers } from '../../lib/api';
+import PayPalPayButton from './PayPalPayButton';
 
 const FALLBACK_RATE = 3.75; // SAR per 1 USD
 
