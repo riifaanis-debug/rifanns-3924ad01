@@ -308,8 +308,16 @@ const InvoicePage: React.FC<InvoicePageProps> = ({ submissionId, onClose }) => {
             </div>
           </div>
         </div>
+
+        {/* Secure online payment (not part of the printed invoice) */}
+        {invoice.status !== 'paid' && (
+          <div className="w-full max-w-[800px] mt-4 mb-8 no-print">
+            <PayPalPayButton kind="invoice" recordId={invoice.id} label="سداد الفاتورة إلكترونياً" />
+          </div>
+        )}
       </div>
     </div>
+
   );
 };
 
