@@ -367,7 +367,7 @@ export const CustomerPaymentRequests: React.FC<CustomerPaymentRequestsProps> = (
               <CheckCircle size={16} /> تم السداد
             </div>
           ) : (
-            <PayPalButton />
+            <PayPalPayButton kind="payment_request" recordId={r.id} label="سداد الفاتورة" />
           )}
 
           <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5 flex justify-between text-[10px] text-muted">
