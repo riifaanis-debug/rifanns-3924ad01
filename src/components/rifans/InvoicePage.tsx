@@ -10,6 +10,7 @@ import { formatAmount } from '../../lib/formatNumber';
 // @ts-ignore
 import html2pdf from 'html2pdf.js';
 import Logo from './Logo';
+import PayPalPayButton from './PayPalPayButton';
 
 interface InvoicePageProps {
   submissionId: string;
