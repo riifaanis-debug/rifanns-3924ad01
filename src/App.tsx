@@ -37,6 +37,7 @@ import ClientCard from './components/rifans/ClientCard';
 import ProfileCompletionModal from './components/rifans/ProfileCompletionModal';
 import { WaiveInfoPage, SchedulingInfoPage, SeizedAmountsInfoPage } from './components/rifans/ServiceInfoPage';
 import DomainVerificationCheck from './components/rifans/DomainVerificationCheck';
+import PaymentReturnPage from './components/rifans/PaymentReturnPage';
 
 const StorySection = () => {
   const { t, direction } = useLanguage();
