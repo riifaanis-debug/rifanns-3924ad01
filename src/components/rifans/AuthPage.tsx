@@ -63,24 +63,21 @@ const AuthPage: React.FC<AuthPageProps> = ({ onClose }) => {
     setError('');
 
     if (mode === 'admin') {
-      if (!formData.nationalId) return setError('يرجى إدخال رقم الهوية');
+      if (!formData.username?.trim()) return setError('يرجى إدخال اسم المستخدم');
       if (!formData.password) return setError('يرجى إدخال كلمة المرور');
       setIsLoading(true);
       try {
         const { supabase } = await import('@/integrations/supabase/client');
-        const { data: rows, error: lookupErr } = await supabase
-          .from('app_users')
-          .select('email')
-          .eq('national_id', formData.nationalId)
-          .eq('role', 'admin')
-          .limit(1);
-        if (lookupErr || !rows || rows.length === 0 || !rows[0].email) {
-          setError('بيانات الدخول غير صحيحة');
+        const { data, error: fnErr } = await supabase.functions.invoke('verify-login', {
+          body: { username: formData.username.trim(), password: formData.password },
+        });
+        if (fnErr || !data?.success) {
+          setError(data?.error || 'بيانات الدخول غير صحيحة');
           setIsLoading(false);
           return;
         }
-        const u = await loginWithEmail(rows[0].email, formData.password);
-        window.location.hash = u.role === 'admin' ? '#/admin' : '#/dashboard';
+        login({ user: data.user, token: `session-${data.user.id}` });
+        window.location.hash = '#/admin';
         onClose();
       } catch (err: any) {
         setError(err.message || 'بيانات الدخول غير صحيحة');
