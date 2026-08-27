@@ -12,9 +12,9 @@ serve(async (req) => {
   }
 
   try {
-    const { email, password } = await req.json();
+    const { email, password, username } = await req.json();
 
-    if (!email || !password) {
+    if ((!email && !username) || !password) {
       return new Response(JSON.stringify({ success: false, error: 'Missing credentials' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -24,6 +24,65 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // ---- Admin login via username + password ----
+    if (username) {
+      const adminUsername = Deno.env.get('ADMIN_USERNAME');
+      const adminPass = Deno.env.get('ADMIN_PASSWORD');
+      const adminMail = Deno.env.get('ADMIN_EMAIL') || 'admin@rifanss.com';
+
+      const invalid = () =>
+        new Response(JSON.stringify({ success: false, error: 'بيانات الدخول غير صحيحة' }), {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+
+      if (!adminUsername || !adminPass) return invalid();
+      if (String(username).trim().toLowerCase() !== adminUsername.trim().toLowerCase()) return invalid();
+      if (password !== adminPass) return invalid();
+
+      // Fetch (or create) the admin record
+      const { data: adminRows } = await supabase
+        .from('app_users')
+        .select('id, full_name, email, phone, national_id, role')
+        .eq('role', 'admin')
+        .limit(1);
+
+      let adminUser = adminRows && adminRows.length > 0 ? adminRows[0] : null;
+
+      if (!adminUser) {
+        const { data: created, error: createErr } = await supabase
+          .from('app_users')
+          .insert({
+            id: `admin-${Date.now()}`,
+            full_name: 'مدير النظام',
+            first_name: 'مدير',
+            last_name: 'النظام',
+            email: adminMail,
+            role: 'admin',
+          })
+          .select('id, full_name, email, phone, national_id, role')
+          .single();
+        if (createErr || !created) return invalid();
+        adminUser = created;
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          user: {
+            id: adminUser.id,
+            fullName: adminUser.full_name,
+            name: adminUser.full_name,
+            email: adminUser.email,
+            phone: adminUser.phone,
+            national_id: adminUser.national_id,
+            role: 'admin',
+          },
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
 
     // Auto-provision admin account if it doesn't exist yet
     const adminEmail = Deno.env.get('ADMIN_EMAIL');
